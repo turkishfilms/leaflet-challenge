@@ -15,26 +15,31 @@ Create a legend that will provide context for your map data.
 const URL = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson"
 
 const elMapo = L.map("map", {
-    center: [40.7128, -74.0059],
-    zoom: 11
+    center: [-120.5253296, 35.9703331],
+    zoom: 5
 });
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(elMapo);
-
+let dooo
 d3.json(URL).then(data => {
+  dooo = data
     // L.geoJson(data).addTo(elMapo)
     data.features.forEach(feature => {
         const { properties: { mag }, geometry:{coordinates: [lat, lon, depth] }} = feature
-        console.log(lat, lon, depth, mag)
+        // console.log(lat, lon, depth, mag)
         L.circleMarker([lat,lon], {
-          color: `rgb(${(1/depth)*3})`,      // Outline color
-          radius: mag*20         // Circle radius in pixels
-      }).addTo(map).bindPopup(lat,lon,mag,dep);
+          color: `rgb(${scale(depth,-10,601,255,0)})`,      // Outline color
+          radius: scale(mag, 0,10,10,100)         // Circle radius in pixels)
+      }).addTo(elMapo).bindPopup(lat,lon,mag,depth);
     })
     console.log(data)
 });
+
+const scale = (num, in_min, in_max, out_min, out_max) => {
+  return (num - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+} //from stackoverfow
 
 
 
