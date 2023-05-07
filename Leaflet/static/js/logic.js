@@ -25,13 +25,11 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let dooo
 d3.json(URL).then(data => {
   dooo = data
-    // L.geoJson(data).addTo(elMapo)
     data.features.forEach(feature => {
         const { properties: { mag }, geometry:{coordinates: [lat, lon, depth] }} = feature
-        // console.log(lat, lon, depth, mag)
         L.circleMarker([lat,lon], {
-          color: `rgb(${scale(depth,-10,601,255,0)})`,      // Outline color
-          radius: scale(mag, 0,10,10,100)         // Circle radius in pixels)
+          color: `rgb(${scale(depth,-10,601,255,0)})`,      
+          radius: scale(mag, 0,10,10,100)     
       }).addTo(elMapo).bindPopup(lat,lon,mag,depth);
     })
     console.log(data)
